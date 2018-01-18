@@ -12,9 +12,19 @@
   <script>
 
 
-
-      var spriteHQ = {
-        // coord of first item of Sprite
+      var harleyQuinn = {
+        src: './assets/top_down_character_2.png',
+        init: function() {
+          var img = new Image();
+          img.src = this.src;
+          return img;
+        },
+        draw: function() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          var img = this.init();
+          this.masking();
+          ctx.drawImage(img, 0, 0);
+        },
         coordFirst: {yTop: 30, xRight: 110, yBottom: 140, xLeft: 25},
         coordSprites: [
                         {x: -10, y: 0},
@@ -24,10 +34,6 @@
                         {x: -5, y: -255},
                         {x: -110, y: -240}
                       ],
-        img: new Image(),
-        init: function() {
-                this.img.src = './assets/top_down_character_2.png';
-              },
         masking: function() {
                   ctx.restore();
                   ctx.save();
@@ -43,20 +49,51 @@
                 }
       }
 
+
+      // var spriteHQ = {
+      //   // coord of first item of Sprite
+      //   coordFirst: {yTop: 30, xRight: 110, yBottom: 140, xLeft: 25},
+      //   coordSprites: [
+      //                   {x: -10, y: 0},
+      //                   {x: -110, y: -5},
+      //                   {x: 0, y: -120},
+      //                   {x: -105, y: -120},
+      //                   {x: -5, y: -255},
+      //                   {x: -110, y: -240}
+      //                 ],
+      //   img: new Image(),
+      //   init: function() {
+      //           this.img.src = './assets/top_down_character_2.png';
+      //         },
+      //   masking: function() {
+      //             ctx.restore();
+      //             ctx.save();
+      //             ctx.beginPath();
+      //             ctx.moveTo(this.coordFirst.xLeft, this.coordFirst.yTop);
+      //             ctx.lineTo(this.coordFirst.xRight, this.coordFirst.yTop);
+      //             ctx.lineTo(this.coordFirst.xRight, this.coordFirst.yBottom);
+      //             ctx.lineTo(this.coordFirst.xLeft, this.coordFirst.yBottom);
+      //             ctx.lineTo(this.coordFirst.xLeft, this.coordFirst.yTop);
+      //             ctx.stroke();
+      //             ctx.closePath();
+      //             ctx.clip();
+      //           }
+      // }
+
       var i = 0;
 
-      var drawSprite = function(sprite) {
-        // clearing previous drawing
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // loop algo
-        (i === sprite.coordSprites.length - 1) ? i = 0 : i += 1;
-        // clipping a mask to sprite
-        sprite.masking();
-        // moving the mask
-        ctx.translate(sprite.coordSprites[i].x, sprite.coordSprites[i].y);
-        // draw the resulting image
-        ctx.drawImage(sprite.img, 0, 0);
-      }
+      // var drawSprite = function(sprite) {
+      //   // clearing previous drawing
+      //   ctx.clearRect(0, 0, canvas.width, canvas.height);
+      //   // loop algo
+      //   (i === sprite.coordSprites.length - 1) ? i = 0 : i += 1;
+      //   // clipping a mask to sprite
+      //   sprite.masking();
+      //   // moving the mask
+      //   ctx.translate(sprite.coordSprites[i].x, sprite.coordSprites[i].y);
+      //   // draw the resulting image
+      //   ctx.drawImage(sprite.img, 0, 0);
+      // }
 
       var start;
       var pause;
@@ -65,7 +102,7 @@
         // if more than 150 ms since last timestamp
         if (timestamp - start >= 150) {
           start = timestamp;
-          drawSprite(spriteHQ);
+          harleyQuinn.draw();
         }
         if (!pause) {
           window.requestAnimationFrame(animateGame);
@@ -77,19 +114,19 @@
       document.addEventListener('DOMContentLoaded', function() {
         canvas = document.getElementById("canvas");
         ctx = canvas.getContext('2d');
-        spriteHQ.init();
+        harleyQuinn.init();
       });
 
 
       window.addEventListener('keydown', function() {
         pause = false;
-        animateGame(0, spriteHQ);
+        animateGame(0);
       });
 
       window.addEventListener('keyup', function() {
         pause = true;
         i=-1;
-        drawSprite(spriteHQ);
+        harleyQuinn.draw();
       });
 
 
