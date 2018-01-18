@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title> CV Game - Elodie Royant</title>
+
+  <style>
+    * { padding: 0; margin: 0; }
+    canvas { background: url('./assets/roads.png'); }
+  </style>
+
+  <script>
+
+
+
+      var spriteHQ = {
+        // coord of first item of Sprite
+        coordFirst: {yTop: 30, xRight: 110, yBottom: 140, xLeft: 25},
+        coordSprites: [
+                        {x: -10, y: 0},
+                        {x: -110, y: -5},
+                        {x: 0, y: -120},
+                        {x: -105, y: -120},
+                        {x: -5, y: -255},
+                        {x: -110, y: -240}
+                      ],
+        img: new Image(),
+        init: function() {
+                this.img.src = './assets/top_down_character_2.png';
+              },
+        masking: function() {
+                  ctx.restore();
+                  ctx.save();
+                  ctx.beginPath();
+                  ctx.moveTo(this.coordFirst.xLeft, this.coordFirst.yTop);
+                  ctx.lineTo(this.coordFirst.xRight, this.coordFirst.yTop);
+                  ctx.lineTo(this.coordFirst.xRight, this.coordFirst.yBottom);
+                  ctx.lineTo(this.coordFirst.xLeft, this.coordFirst.yBottom);
+                  ctx.lineTo(this.coordFirst.xLeft, this.coordFirst.yTop);
+                  ctx.stroke();
+                  ctx.closePath();
+                  ctx.clip();
+                }
+      }
+
+      var i = 0;
+
+      var drawSprite = function(sprite) {
+        // clearing previous drawing
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // loop algo
+        (i === sprite.coordSprites.length - 1) ? i = 0 : i += 1;
+        // clipping a mask to sprite
+        sprite.masking();
+        // moving the mask
+        ctx.translate(sprite.coordSprites[i].x, sprite.coordSprites[i].y);
+        // draw the resulting image
+        ctx.drawImage(sprite.img, 0, 0);
+      }
+
+      var start;
+      var pause;
+      var animateGame = function(timestamp, sprite){
+        if (!start) { start = timestamp; }
+        // if more than 150 ms since last timestamp
+        if (timestamp - start >= 150) {
+          start = timestamp;
+          drawSprite(spriteHQ);
+        }
+        if (!pause) {
+          window.requestAnimationFrame(animateGame);
+        }
+      }
+
+      // Event Handlers
+      var canvas, ctx;
+      document.addEventListener('DOMContentLoaded', function() {
+        canvas = document.getElementById("canvas");
+        ctx = canvas.getContext('2d');
+        spriteHQ.init();
+      });
+
+
+      window.addEventListener('keydown', function() {
+        pause = false;
+        animateGame(0, spriteHQ);
+      });
+
+      window.addEventListener('keyup', function() {
+        pause = true;
+        i=-1;
+        drawSprite(spriteHQ);
+      });
+
+
+      // to-do:
+      // refacto moveFoward (spriteHQ à variabiliser)
+      // gérer le déplacement (rotation translation,
+      // backward si on recule
+      // le scale
+
+      // objet voiture
+      // collision perso / voiture
+
+      // collision avec ce qui est en dehors de la route
+
+      // objet compétences
+      // collision compétences voitures / ou perso
+
+      // objet flics
+      // ajouter tirer sur le perso principal
+      // collision flics
+
+      // objet autre voitures
+      // collision autres voitures
+
+      // objet autres perso
+      // collisions
+
+
+  </script>
+</head>
+
+<body>
+<!--   <div class="mask">
+    <img src='./assets/top_down_character_2.png' alt="">
+  </div> -->
+  <canvas id="canvas" width="1500" height="1500" >
+    "Your browser does not support canvas :("
+  </canvas>
+
+
+</body>
+
+</html>
+
+
+
+<!-- https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Using_images
+https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Transformations
+
+image de fonds
+https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Compositing
+
+
+récupérer la zone de collision (hors route)
+https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Pixel_manipulation_with_canvas -->
+
+<!-- pour completer le fonds avec les batiments : pattern
+https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Applying_styles_and_colors -->
+<!-- écrire un peu de texte
+https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_text -->
+<!-- https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas -->
